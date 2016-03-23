@@ -4,5 +4,5 @@ AddUserToAppBinding()
     config set users/root/bindings/$2/interface  $2
 }
 
-AddUserToAppBinding root mangoh_muxCtrl gpioMuxCtrlService
+AddUserToAppBinding root mangoh_muxCtrl muxCtrlService
 echo "mux service binding done!"

@@ -1,0 +1,22 @@
+executables:
+{
+    muxCtrlService = ( muxCtrl )
+}
+
+bindings:
+{
+    muxCtrlService.muxCtrl.mangoh_gpioExpander -> gpioExpanderService.mangoh_gpioExpander
+}
+
+processes:
+{
+    run:
+    {
+        ( muxCtrlService )
+    }
+}
+
+extern:
+{
+    muxCtrlService.muxCtrl.mangoh_muxCtrl
+}

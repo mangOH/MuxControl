@@ -288,7 +288,7 @@ FUNCTION le_result_t ModuleCodecSel
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IoTSlot0Reset
+FUNCTION le_result_t IotSlot0Reset
 (
 );
 
@@ -303,7 +303,7 @@ FUNCTION le_result_t IoTSlot0Reset
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IoTSlot1Reset
+FUNCTION le_result_t IotSlot1Reset
 (
 );
 
@@ -318,6 +318,6 @@ FUNCTION le_result_t IoTSlot1Reset
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IoTSlot2Reset
+FUNCTION le_result_t IotSlot2Reset
 (
 );

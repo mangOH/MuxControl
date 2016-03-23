@@ -1,0 +1,26 @@
+
+requires:
+{
+    api:
+    {
+        mangoh_gpioExpander = ${MANGOH_ROOT}/apps/GpioExpander/mangoh_gpioExpander.api
+    }
+}
+
+cflags:
+{
+    "-std=c99"
+}
+
+sources:
+{
+    muxCtrl.c
+}
+
+provides:
+{
+    api:
+    {
+        mangoh_muxCtrl = ${MANGOH_ROOT}/apps/MuxCtrl/mangoh_muxCtrl.api
+    }
+}

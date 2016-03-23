@@ -616,7 +616,7 @@ le_result_t mangoh_muxCtrl_ModuleCodecSel
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_IoTSlot0Reset
+le_result_t mangoh_muxCtrl_IotSlot0Reset
 (
     void
 )
@@ -648,7 +648,7 @@ le_result_t mangoh_muxCtrl_IoTSlot0Reset
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_IoTSlot1Reset
+le_result_t mangoh_muxCtrl_IotSlot1Reset
 (
     void
 )
@@ -680,7 +680,7 @@ le_result_t mangoh_muxCtrl_IoTSlot1Reset
  * @return LE_OK          Function succeeded.
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_IoTSlot2Reset
+le_result_t mangoh_muxCtrl_IotSlot2Reset
 (
     void
 )
