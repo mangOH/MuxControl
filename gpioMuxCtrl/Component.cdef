@@ -1,0 +1,26 @@
+
+requires:
+{
+    api:
+    {
+        mangoh_gpioExpander = ${LEGATO_ROOT}/interfaces/mangoh_gpioExpander.api
+    }
+}
+
+cflags:
+{
+    "-std=c99"
+}
+
+sources:
+{
+    muxCtrl.c
+}
+
+provides:
+{
+    api:
+    {
+        mangoh_muxCtrl = ${LEGATO_ROOT}/interfaces/mangoh_muxCtrl.api
+    }
+}

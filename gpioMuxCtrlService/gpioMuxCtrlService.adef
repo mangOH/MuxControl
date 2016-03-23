@@ -1,0 +1,25 @@
+executables:
+{
+    gpioMuxCtrlService = ( $LEGATO_ROOT/components/gpioMuxCtrl )
+}
+
+bindings:
+{
+    gpioMuxCtrlService.gpioMuxCtrl.mangoh_gpioExpander -> gpioExpanderService.mangoh_gpioExpander
+}
+
+processes:
+{
+    run:
+    {
+        ( gpioMuxCtrlService )
+    }
+}
+
+provides:
+{
+    api:
+    {
+        gpioMuxCtrlService.gpioMuxCtrl.mangoh_muxCtrl
+    }
+}
