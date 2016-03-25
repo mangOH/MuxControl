@@ -21,6 +21,6 @@ provides:
 {
     api:
     {
-        mangoh_muxCtrl = ${MANGOH_ROOT}/apps/MuxCtrl/mangoh_muxCtrl.api
+        mangoh_muxCtrl = ${MANGOH_ROOT}/apps/MuxControl/mangoh_muxCtrl.api
     }
 }

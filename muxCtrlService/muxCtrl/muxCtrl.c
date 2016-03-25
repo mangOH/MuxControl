@@ -11,9 +11,24 @@
  * Copyright (C) Sierra Wireless, Inc. Use of this work is subject to license.
  */
 
+// TODO: Should the functions in this API bother returning a result?  It seems like it is a
+//       critical system error if you lose control over the GPIO expander.
+
 /* Legato Framework */
 #include "legato.h"
 #include "interfaces.h"
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Helper macro which initializes the given pin to output and issues a fatal error if unsuccessful
+ */
+//--------------------------------------------------------------------------------------------------
+#define CONFIGURE_AS_OUTPUT(_gpioDefine_) \
+    LE_FATAL_IF( \
+        mangoh_gpioExpander_SetDirectionMode( \
+            _gpioDefine_, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT) != LE_OK, \
+        "Could not configure pin %s as output", \
+        STRINGIZE(_gpioDefine_))
 
 //--------------------------------------------------------------------------------------------------
 /**
@@ -22,8 +37,9 @@
  * - The signal UART_EXP1_ENn is set output as HIGH
  *
  *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotAllUart1Off
@@ -31,18 +47,13 @@ le_result_t mangoh_muxCtrl_IotAllUart1Off
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
+        LE_ERROR("Failed to disable UART 1");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -56,8 +67,9 @@ le_result_t mangoh_muxCtrl_IotAllUart1Off
  *
  * Example usage: IoT0 slot UART1 for IoT TI bluetooth module
  * 
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Iot0Uart1On
@@ -65,30 +77,19 @@ le_result_t mangoh_muxCtrl_Iot0Uart1On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP1_IN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 0 for UART 1");
+        return LE_FAULT;
+    }
 
-    LE_INFO("****** muxCtrl Iot0 UART1 On \n");
-    LE_INFO("****** muxCtrl Iot0 UART1 On: Exp1 Enn low \n");
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
+        LE_ERROR("Failed to enable UART 1");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    LE_INFO("****** muxCtrl Iot0 UART1 On: Exp1 In high \n");
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -100,9 +101,9 @@ le_result_t mangoh_muxCtrl_Iot0Uart1On
  * - The signal UART_EXP1_ENn is set output as LOW
  * - The signal UART_EXP1_IN  is set output as LOW
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Iot1Uart1On
@@ -110,27 +111,19 @@ le_result_t mangoh_muxCtrl_Iot1Uart1On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP1_IN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 1 for UART 1");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_ENN);
+        LE_ERROR("Failed to enable UART 1");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP1_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -141,9 +134,9 @@ le_result_t mangoh_muxCtrl_Iot1Uart1On
  *
  * - The signal SPI_EXP1_ENn is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotAllSpiOff
@@ -151,18 +144,13 @@ le_result_t mangoh_muxCtrl_IotAllSpiOff
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
+        LE_ERROR("Failed to disable SPI");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -173,9 +161,9 @@ le_result_t mangoh_muxCtrl_IotAllSpiOff
  * - The signal SPI_EXP1_ENn is set output as LOW
  * - The signal SPI_EXP1_IN  is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Iot0Spi1On
@@ -183,27 +171,19 @@ le_result_t mangoh_muxCtrl_Iot0Spi1On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_IN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 0 for SPI");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
+        LE_ERROR("Failed to enable SPI");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -217,8 +197,9 @@ le_result_t mangoh_muxCtrl_Iot0Spi1On
  *
  * Example usage: IoT1 slot SPI for IoT CAN bus module
  *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Iot1Spi1On
@@ -226,27 +207,19 @@ le_result_t mangoh_muxCtrl_Iot1Spi1On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_IN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 1 for SPI");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_ENN);
+        LE_ERROR("Failed to enable SPI");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SPI_EXP1_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -257,9 +230,9 @@ le_result_t mangoh_muxCtrl_Iot1Spi1On
  *
  * - The signal UART_EXP2_ENn is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotAllUart2Off
@@ -267,18 +240,13 @@ le_result_t mangoh_muxCtrl_IotAllUart2Off
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP2_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
+        LE_ERROR("Failed to disable UART 2");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -289,9 +257,9 @@ le_result_t mangoh_muxCtrl_IotAllUart2Off
  * - The signal UART_EXP2_ENn is set output as LOW
  * - The signal UART_EXP2_IN  is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Iot2Uart2On
@@ -299,27 +267,19 @@ le_result_t mangoh_muxCtrl_Iot2Uart2On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP2_IN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 2 for UART 2");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP2_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
+        LE_ERROR("Failed to enable UART 2");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP2_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP2_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -331,9 +291,9 @@ le_result_t mangoh_muxCtrl_Iot2Uart2On
  * - The signal UART_EXP2_ENn is set output as LOW
  * - The signal UART_EXP2_IN  is set output as LOW
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_Uart2DebugOn
@@ -341,27 +301,19 @@ le_result_t mangoh_muxCtrl_Uart2DebugOn
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP2_IN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to select debug for UART 2");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_UART_EXP2_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_UART_EXP2_ENN);
+        LE_ERROR("Failed to enable UART 2");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP2_IN);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_UART_EXP2_IN);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -372,9 +324,9 @@ le_result_t mangoh_muxCtrl_Uart2DebugOn
  *
  * - The signal PCM_EXP1_ENn is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_PcmOff
@@ -382,18 +334,13 @@ le_result_t mangoh_muxCtrl_PcmOff
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
+        LE_ERROR("Failed to disable PCM");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -404,9 +351,9 @@ le_result_t mangoh_muxCtrl_PcmOff
  * - The signal PCM_EXP1_ENn is set output as LOW
  * - The signal PCM_EXP1_SEL is set output as LOW
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_PcmIot0On
@@ -414,27 +361,19 @@ le_result_t mangoh_muxCtrl_PcmIot0On
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 0 for PCM");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
+        LE_ERROR("Failed to enable PCM");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_SEL);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_SEL);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -446,9 +385,9 @@ le_result_t mangoh_muxCtrl_PcmIot0On
  * - The signal PCM_EXP1_ENn is set output as LOW
  * - The signal PCM_EXP1_SEL is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_PcmCodecOn
@@ -456,27 +395,19 @@ le_result_t mangoh_muxCtrl_PcmCodecOn
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select codec for PCM");
+        return LE_FAULT;
+    }
 
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_ENN);
+        LE_ERROR("Failed to enable PCM");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_SEL);
-    if (gpioRef == NULL)
-    {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_PCM_EXP1_SEL);
-        return LE_FAULT;
-    }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
 
     return LE_OK;
 }
@@ -487,9 +418,9 @@ le_result_t mangoh_muxCtrl_PcmCodecOn
  *
  * - The signal SDIO_SEL is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_SdioSelUsdcard
@@ -497,18 +428,13 @@ le_result_t mangoh_muxCtrl_SdioSelUsdcard
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SDIO_SEL);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SDIO_SEL, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SDIO_SEL);
+        LE_ERROR("Failed to select MicroSD slot for SDIO");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -518,9 +444,9 @@ le_result_t mangoh_muxCtrl_SdioSelUsdcard
  *
  * - The signal SDIO_SEL is set output as LOW
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_SdioSelIot0
@@ -528,18 +454,13 @@ le_result_t mangoh_muxCtrl_SdioSelIot0
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_SDIO_SEL);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_SDIO_SEL, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_SDIO_SEL);
+        LE_ERROR("Failed to select IoT slot 0 for SDIO");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -549,9 +470,9 @@ le_result_t mangoh_muxCtrl_SdioSelIot0
  *
  * - The signal PCM_ANALOG_SELECT is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_OnboardCodecSel
@@ -559,18 +480,13 @@ le_result_t mangoh_muxCtrl_OnboardCodecSel
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_PCM_ANALOG_SELECT);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_PCM_ANALOG_SELECT);
+        LE_ERROR("Failed to select onboard for codec location");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -580,9 +496,9 @@ le_result_t mangoh_muxCtrl_OnboardCodecSel
  *
  * - The signal PCM_ANALOG_SELECT is set output as LOW
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_ModuleCodecSel
@@ -590,18 +506,13 @@ le_result_t mangoh_muxCtrl_ModuleCodecSel
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    gpioRef = mangoh_gpioExpander_Request(1, MANGOH_GPIOEXPANDER_EXP1_PIN_PCM_ANALOG_SELECT);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Gpio Expander request module:1 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP1_PIN_PCM_ANALOG_SELECT);
+        LE_ERROR("Failed to select module for codec location");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_LOW);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -611,9 +522,9 @@ le_result_t mangoh_muxCtrl_ModuleCodecSel
  *
  * - The signal GPIO Expander3 GPIO_IOT0_RESET is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotSlot0Reset
@@ -621,19 +532,13 @@ le_result_t mangoh_muxCtrl_IotSlot0Reset
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    LE_INFO("****** muxCtrl Iot0 Reset \n");
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT0_RESET);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_GPIO_IOT0_RESET, MANGOH_GPIOEXPANDER_LEVEL_HIGH))
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT0_RESET);
+        LE_ERROR("Failed to take IoT slot 0 out of reset");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -643,9 +548,9 @@ le_result_t mangoh_muxCtrl_IotSlot0Reset
  *
  * - The signal GPIO Expander3 GPIO_IOT1_RESET(IO3) is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotSlot1Reset
@@ -653,19 +558,13 @@ le_result_t mangoh_muxCtrl_IotSlot1Reset
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    LE_INFO("****** muxCtrl Iot1 Reset \n");
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT1_RESET);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_GPIO_IOT1_RESET, MANGOH_GPIOEXPANDER_LEVEL_HIGH))
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT1_RESET);
+        LE_ERROR("Failed to take IoT slot 1 out of reset");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
@@ -675,9 +574,9 @@ le_result_t mangoh_muxCtrl_IotSlot1Reset
  *
  * - The signal GPIO Expander3 GPIO_IOT2_RESET is set output as HIGH
  *
- *
- * @return LE_FAULT       Function failed.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 le_result_t mangoh_muxCtrl_IotSlot2Reset
@@ -685,25 +584,39 @@ le_result_t mangoh_muxCtrl_IotSlot2Reset
     void
 )
 {
-    mangoh_gpioExpander_GpioRef_t gpioRef;
-
-    LE_INFO("****** muxCtrl Iot1 Reset \n");
-    gpioRef = mangoh_gpioExpander_Request(3, MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT2_RESET);
-    if (gpioRef == NULL)
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_GPIO_IOT2_RESET, MANGOH_GPIOEXPANDER_LEVEL_HIGH))
     {
-        LE_ERROR("Gpio Expander request module:3 gpio:%d failed\n", MANGOH_GPIOEXPANDER_EXP3_PIN_GPIO_IOT2_RESET);
+        LE_ERROR("Failed to take IoT slot 2 out of reset");
         return LE_FAULT;
     }
-    mangoh_gpioExpander_SetDirectionMode(gpioRef, MANGOH_GPIOEXPANDER_PIN_MODE_OUTPUT);
-    mangoh_gpioExpander_Output(gpioRef, MANGOH_GPIOEXPANDER_ACTIVE_TYPE_HIGH);
-    mangoh_gpioExpander_Release(gpioRef);
-    
+
     return LE_OK;
 }
 
 COMPONENT_INIT
 {
-    LE_INFO("This is sample mangOH Mux Control API service by using mangoh_gpioExpander.api and mangoh_muxCtrl.api\n");
+    LE_INFO(
+        "This is sample mangOH Mux Control API service by using mangoh_gpioExpander.api and "
+        "mangoh_muxCtrl.api\n");
+
+    // Select the debug uart or else the rs232 port won't be usable
+    mangoh_muxCtrl_Uart2DebugOn();
+
+    // Configure all of the pins controlled by this service to outputs
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_UART_EXP1_ENN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_UART_EXP1_IN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_ENN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_SPI_EXP1_IN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_UART_EXP2_ENN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_UART_EXP2_IN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_SDIO_SEL);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_GPIO_IOT0_RESET);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_GPIO_IOT1_RESET);
+    CONFIGURE_AS_OUTPUT(MANGOH_GPIOEXPANDER_PIN_GPIO_IOT2_RESET);
 
     return;
 }

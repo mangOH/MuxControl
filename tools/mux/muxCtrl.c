@@ -71,7 +71,7 @@ static struct
     },
     {
         .function=mangoh_muxCtrl_Uart2DebugOn,
-        .description="TODO: description"
+        .description="Turn UART 2 on for debug port"
     },
     {
         .function=mangoh_muxCtrl_PcmOff,

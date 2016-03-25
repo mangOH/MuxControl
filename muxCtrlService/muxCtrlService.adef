@@ -1,3 +1,5 @@
+start: auto
+
 executables:
 {
     muxCtrlService = ( muxCtrl )
