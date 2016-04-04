@@ -172,53 +172,6 @@ FUNCTION le_result_t Uart2DebugOn
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH PCM OFF.
- *
- * - The signal PCM_EXP1_ENn is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
- */
-//--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t PcmOff
-(
-);
-
-//--------------------------------------------------------------------------------------------------
-/**
- * Mux Control: mangOH PCM IOT0 ON.
- *
- * - The signal PCM_EXP1_ENn is set output as LOW
- * - The signal PCM_EXP1_SEL is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
- */
-//--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t PcmIot0On
-(
-);
-
-//--------------------------------------------------------------------------------------------------
-/**
- * Mux Control: mangOH PCM CODEC ON.
- *
- * - The signal PCM_EXP1_ENn is set output as LOW
- * - The signal PCM_EXP1_SEL is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
- */
-//--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t PcmCodecOn
-(
-);
-
-//--------------------------------------------------------------------------------------------------
-/**
  * Mux Control: mangOH SDIO SEL USDCARD.
  *
  * - The signal SDIO_SEL is set output as HIGH
@@ -249,31 +202,49 @@ FUNCTION le_result_t SdioSelIot0
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH ONBOARD CODEC SEL.
+ * Disable the audio path
  *
- * - The signal PCM_ANALOG_SELECT is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t OnboardCodecSel
+FUNCTION le_result_t AudioDisable
 (
 );
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH MODULE CODEC SEL.
+ * Route audio via a codec installed in IoT slot 0
  *
- * - The signal PCM_ANALOG_SELECT is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t ModuleCodecSel
+FUNCTION le_result_t AudioSelectIot0Codec
+(
+);
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Route audio via the codec on the mangOH board
+ *
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
+ */
+//--------------------------------------------------------------------------------------------------
+FUNCTION le_result_t AudioSelectOnboardCodec
+(
+);
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Route audio via a codec internal to the WP85 module
+ *
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
+ */
+//--------------------------------------------------------------------------------------------------
+FUNCTION le_result_t AudioSelectInternalCodec
 (
 );
 

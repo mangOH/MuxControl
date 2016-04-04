@@ -320,100 +320,6 @@ le_result_t mangoh_muxCtrl_Uart2DebugOn
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH PCM OFF.
- *
- * - The signal PCM_EXP1_ENn is set output as HIGH
- *
- * @return
- *      - LE_FAULT
- *      - LE_OK
- */
-//--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_PcmOff
-(
-    void
-)
-{
-    if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
-    {
-        LE_ERROR("Failed to disable PCM");
-        return LE_FAULT;
-    }
-
-    return LE_OK;
-}
-
-//--------------------------------------------------------------------------------------------------
-/**
- * Mux Control: mangOH PCM IOT0 ON.
- *
- * - The signal PCM_EXP1_ENn is set output as LOW
- * - The signal PCM_EXP1_SEL is set output as LOW
- *
- * @return
- *      - LE_FAULT
- *      - LE_OK
- */
-//--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_PcmIot0On
-(
-    void
-)
-{
-    if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
-    {
-        LE_ERROR("Failed to select IoT slot 0 for PCM");
-        return LE_FAULT;
-    }
-
-    if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
-    {
-        LE_ERROR("Failed to enable PCM");
-        return LE_FAULT;
-    }
-
-    return LE_OK;
-}
-
-//--------------------------------------------------------------------------------------------------
-/**
- * Mux Control: mangOH PCM CODEC ON.
- *
- * - The signal PCM_EXP1_ENn is set output as LOW
- * - The signal PCM_EXP1_SEL is set output as HIGH
- *
- * @return
- *      - LE_FAULT
- *      - LE_OK
- */
-//--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_PcmCodecOn
-(
-    void
-)
-{
-    if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
-    {
-        LE_ERROR("Failed to select codec for PCM");
-        return LE_FAULT;
-    }
-
-    if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
-    {
-        LE_ERROR("Failed to enable PCM");
-        return LE_FAULT;
-    }
-
-    return LE_OK;
-}
-
-//--------------------------------------------------------------------------------------------------
-/**
  * Mux Control: mangOH SDIO SEL USDCARD.
  *
  * - The signal SDIO_SEL is set output as HIGH
@@ -466,24 +372,28 @@ le_result_t mangoh_muxCtrl_SdioSelIot0
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH ONBOARD CODEC SEL.
- *
- * - The signal PCM_ANALOG_SELECT is set output as HIGH
+ * Disable the audio path
  *
  * @return
- *      - LE_FAULT
- *      - LE_OK
+ *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_OnboardCodecSel
+le_result_t mangoh_muxCtrl_AudioDisable
 (
     void
 )
 {
     if (mangoh_gpioExpander_Output(
-            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
     {
-        LE_ERROR("Failed to select onboard for codec location");
+        LE_ERROR("Failed to disable PCM");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to select off-chip codec location");
         return LE_FAULT;
     }
 
@@ -492,24 +402,102 @@ le_result_t mangoh_muxCtrl_OnboardCodecSel
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH MODULE CODEC SEL.
- *
- * - The signal PCM_ANALOG_SELECT is set output as LOW
+ * Route audio via a codec installed in IoT slot 0
  *
  * @return
- *      - LE_FAULT
- *      - LE_OK
+ *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_muxCtrl_ModuleCodecSel
+le_result_t mangoh_gpioExpander_AudioSelectIot0Codec
 (
     void
 )
 {
     if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to select IoT slot 0 for PCM");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
             MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
     {
-        LE_ERROR("Failed to select module for codec location");
+        LE_ERROR("Failed to select off-chip codec location");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to enable PCM");
+        return LE_FAULT;
+    }
+
+    return LE_OK;
+}
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Route audio via the codec on the mangOH board
+ *
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t mangoh_gpioExpander_AudioSelectOnboardCodec
+(
+    void
+)
+{
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_SEL, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select onboard for PCM");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to select off-chip codec location");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_LOW) != LE_OK)
+    {
+        LE_ERROR("Failed to enable PCM");
+        return LE_FAULT;
+    }
+
+    return LE_OK;
+}
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Route audio via the codec on the mangOH board
+ *
+ * @return
+ *      LE_OK on success or LE_FAULT on failure
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t mangoh_gpioExpander_AudioSelectOnboardCodec
+(
+    void
+)
+{
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_EXP1_ENN, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to disable PCM");
+        return LE_FAULT;
+    }
+
+    if (mangoh_gpioExpander_Output(
+            MANGOH_GPIOEXPANDER_PIN_PCM_ANALOG_SELECT, MANGOH_GPIOEXPANDER_LEVEL_HIGH) != LE_OK)
+    {
+        LE_ERROR("Failed to select on-chip codec location");
         return LE_FAULT;
     }
 
