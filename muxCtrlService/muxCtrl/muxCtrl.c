@@ -408,7 +408,7 @@ le_result_t mangoh_muxCtrl_AudioDisable
  *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_gpioExpander_AudioSelectIot0Codec
+le_result_t mangoh_muxCtrl_AudioSelectIot0Codec
 (
     void
 )
@@ -445,7 +445,7 @@ le_result_t mangoh_gpioExpander_AudioSelectIot0Codec
  *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_gpioExpander_AudioSelectOnboardCodec
+le_result_t mangoh_muxCtrl_AudioSelectOnboardCodec
 (
     void
 )
@@ -476,13 +476,13 @@ le_result_t mangoh_gpioExpander_AudioSelectOnboardCodec
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Route audio via the codec on the mangOH board
+ * Route audio via a codec internal to the CF3 module
  *
  * @return
  *      LE_OK on success or LE_FAULT on failure
  */
 //--------------------------------------------------------------------------------------------------
-le_result_t mangoh_gpioExpander_AudioSelectOnboardCodec
+le_result_t mangoh_muxCtrl_AudioSelectInternalCodec
 (
     void
 )

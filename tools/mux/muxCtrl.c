@@ -74,18 +74,6 @@ static struct
         .description="Turn UART 2 on for debug port"
     },
     {
-        .function=mangoh_muxCtrl_PcmOff,
-        .description="Turn PCM off"
-    },
-    {
-        .function=mangoh_muxCtrl_PcmIot0On,
-        .description="Turn PCM on for IoT slot 0"
-    },
-    {
-        .function=mangoh_muxCtrl_PcmCodecOn,
-        .description="Turn PCM codec on"
-    },
-    {
         .function=mangoh_muxCtrl_SdioSelUsdcard,
         .description="Select the microSD card on the SDIO mux"
     },
@@ -94,12 +82,20 @@ static struct
         .description="Select IoT slot 0 on the SDIO mux"
     },
     {
-        .function=mangoh_muxCtrl_OnboardCodecSel,
-        .description="TODO: description"
+        .function=mangoh_muxCtrl_AudioDisable,
+        .description="Disable audio"
     },
     {
-        .function=mangoh_muxCtrl_ModuleCodecSel,
-        .description="TODO: description"
+        .function=mangoh_muxCtrl_AudioSelectIot0Codec,
+        .description="Select the audio codec in IoT slot 0"
+    },
+    {
+        .function=mangoh_muxCtrl_AudioSelectOnboardCodec,
+        .description="Select the audio codec on the mangOH board"
+    },
+    {
+        .function=mangoh_muxCtrl_AudioSelectInternalCodec,
+        .description="Select the audio codec internal to the CF3 module"
     },
     {
         .function=mangoh_muxCtrl_IotSlot0Reset,

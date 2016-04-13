@@ -238,7 +238,7 @@ FUNCTION le_result_t AudioSelectOnboardCodec
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Route audio via a codec internal to the WP85 module
+ * Route audio via a codec internal to the CF3 module
  *
  * @return
  *      LE_OK on success or LE_FAULT on failure
