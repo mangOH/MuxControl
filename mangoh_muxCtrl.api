@@ -31,13 +31,11 @@
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH All IOT UART1 OFF.
+ * Disable UART 1
  *
- * - The signal UART_EXP1_ENn is set output as HIGH 
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t IotAllUart1Off
@@ -46,14 +44,11 @@ FUNCTION le_result_t IotAllUart1Off
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH IOT0 UART1 ON.
+ * Enable UART 1 on IoT slot 0
  *
- * - The signal UART_EXP1_ENn is set output as LOW
- * - The signal UART_EXP1_IN  is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Iot0Uart1On
@@ -62,14 +57,11 @@ FUNCTION le_result_t Iot0Uart1On
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH IOT1 UART1 ON.
+ * Enable UART 1 on IoT slot 1
  *
- * - The signal UART_EXP1_ENn is set output as LOW
- * - The signal UART_EXP1_IN  is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Iot1Uart1On
@@ -78,13 +70,11 @@ FUNCTION le_result_t Iot1Uart1On
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH All IOT SPI OFF.
+ * Disable SPI
  *
- * - The signal SPI_EXP1_ENn is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t IotAllSpiOff
@@ -93,14 +83,11 @@ FUNCTION le_result_t IotAllSpiOff
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH IOT0 SPI1 ON.
+ * Enable SPI on IoT slot 0
  *
- * - The signal SPI_EXP1_ENn is set output as LOW
- * - The signal SPI_EXP1_IN  is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Iot0Spi1On
@@ -111,12 +98,9 @@ FUNCTION le_result_t Iot0Spi1On
 /**
  * Mux Control: mangOH IOT1 SPI1 ON.
  *
- * - The signal SPI_EXP1_ENn is set output as LOW
- * - The signal SPI_EXP1_IN  is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Iot1Spi1On
@@ -125,13 +109,11 @@ FUNCTION le_result_t Iot1Spi1On
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH All IOT UART2 OFF.
+ * Disable UART 2
  *
- * - The signal UART_EXP2_ENn is set output as HIGH 
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t IotAllUart2Off
@@ -140,14 +122,11 @@ FUNCTION le_result_t IotAllUart2Off
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH IOT2 UART2 ON.
+ * Enable UART 2 on IoT slot 2
  *
- * - The signal UART_EXP2_ENn is set output as LOW
- * - The signal UART_EXP2_IN  is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Iot2Uart2On
@@ -156,14 +135,11 @@ FUNCTION le_result_t Iot2Uart2On
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH UART2 DEBUG ON.
+ * Enable UART 2 on the debug port
  *
- * - The signal UART_EXP2_ENn is set output as LOW
- * - The signal UART_EXP2_IN  is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t Uart2DebugOn
@@ -172,28 +148,24 @@ FUNCTION le_result_t Uart2DebugOn
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH SDIO SEL USDCARD.
+ * Connect the SDIO interface to the MicroSD card slot
  *
- * - The signal SDIO_SEL is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t SdioSelUsdcard
+FUNCTION le_result_t SdioSelMicroSd
 (
 );
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: mangOH SDIO SEL IOT0.
+ * Connect the SDIO interface to IoT slot 0
  *
- * - The signal SDIO_SEL is set output as LOW
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
 FUNCTION le_result_t SdioSelIot0
@@ -250,45 +222,39 @@ FUNCTION le_result_t AudioSelectInternalCodec
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: IOT0 module out of reset.
+ * Take IoT slot 0 card out of reset
  *
- * - The signal GPIO Expander3 GPIO_IOT0_RESET is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IotSlot0Reset
+FUNCTION le_result_t IotSlot0DeassertReset
 (
 );
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: IOT1 module out of reset.
+ * Take IoT slot 1 card out of reset
  *
- * - The signal GPIO Expander3 GPIO_IOT1_RESET(IO3) is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IotSlot1Reset
+FUNCTION le_result_t IotSlot1DeassertReset
 (
 );
 
 //--------------------------------------------------------------------------------------------------
 /**
- * Mux Control: IOT2 module out of reset.
+ * Take IoT slot 2 card out of reset
  *
- * - The signal GPIO Expander3 GPIO_IOT2_RESET is set output as HIGH
- *
- *
- * @return LE_FAULT       Function failed to release object.
- * @return LE_OK          Function succeeded.
+ * @return
+ *      - LE_FAULT
+ *      - LE_OK
  */
 //--------------------------------------------------------------------------------------------------
-FUNCTION le_result_t IotSlot2Reset
+FUNCTION le_result_t IotSlot2DeassertReset
 (
 );

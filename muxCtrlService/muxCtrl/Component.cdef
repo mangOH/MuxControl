@@ -3,7 +3,19 @@ requires:
 {
     api:
     {
-        mangoh_gpioExpander = ${MANGOH_ROOT}/apps/GpioExpander/mangoh_gpioExpander.api
+        mangoh_gpioPinUart1Enable     = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinUart1Select     = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinSpiEnable       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinSpiSelect       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinUart2Enable     = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinUart2Select     = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinPcmEnable       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinPcmSelect       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinSdioSelect      = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinPcmAnalogSelect = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinIot0Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinIot1Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinIot2Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
     }
 }
 

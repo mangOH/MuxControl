@@ -1,10 +1,8 @@
 /**
- * @file gpioPin.c
+ * @file
  *
- * This is sample Legato GPIO app by using mangoh_gpioExpander.api on mangOH project.
- *
- * It includes functions to enable/disable IOT card LED1, LED2, LED3, and LED4.
- * Those IOT LEDs will be on or off one by one
+ * This file implements a simple command line program for manually controlling
+ * the peripheral muxes in the mangOH Green.
  *
  * <HR>
  *
@@ -74,7 +72,7 @@ static struct
         .description="Turn UART 2 on for debug port"
     },
     {
-        .function=mangoh_muxCtrl_SdioSelUsdcard,
+        .function=mangoh_muxCtrl_SdioSelMicroSd,
         .description="Select the microSD card on the SDIO mux"
     },
     {
@@ -98,15 +96,15 @@ static struct
         .description="Select the audio codec internal to the CF3 module"
     },
     {
-        .function=mangoh_muxCtrl_IotSlot0Reset,
+        .function=mangoh_muxCtrl_IotSlot0DeassertReset,
         .description="Reset IoT slot 0"
     },
     {
-        .function=mangoh_muxCtrl_IotSlot1Reset,
+        .function=mangoh_muxCtrl_IotSlot1DeassertReset,
         .description="Reset IoT slot 1"
     },
     {
-        .function=mangoh_muxCtrl_IotSlot2Reset,
+        .function=mangoh_muxCtrl_IotSlot2DeassertReset,
         .description="Reset IoT slot 2"
     },
 };
