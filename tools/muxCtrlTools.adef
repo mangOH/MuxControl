@@ -1,6 +1,6 @@
 
 start: manual
-sandboxed: true
+sandboxed: false
 
 executables:
 {
