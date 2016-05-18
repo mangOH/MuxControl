@@ -107,6 +107,10 @@ static struct
         .function=mangoh_muxCtrl_IotSlot2DeassertReset,
         .description="Reset IoT slot 2"
     },
+    {
+        .function=mangoh_muxCtrl_ArduinoReset,
+        .description="Reset Arduino"
+    },
 };
 
 //--------------------------------------------------------------------------------------------------

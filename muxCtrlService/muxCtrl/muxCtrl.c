@@ -501,6 +501,82 @@ le_result_t mangoh_muxCtrl_IotSlot2DeassertReset
     return LE_OK;
 }
 
+//--------------------------------------------------------------------------------------------------
+/**
+ * Put Arduino in reset state
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t mangoh_muxCtrl_ArduinoAssertReset
+(
+)
+{
+    if (mangoh_gpioPinArduinoReset_Activate() != LE_OK)
+    {
+        LE_ERROR("Failed to put Arduino reset pin low");
+        return LE_FAULT;
+    }
+
+    return LE_OK;
+}
+
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Put Arduino out of reset state
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t mangoh_muxCtrl_ArduinoDeassertReset
+(
+)
+{
+    if (mangoh_gpioPinArduinoReset_Deactivate() != LE_OK)
+    {
+        LE_ERROR("Failed to put Arduino reset pin high");
+        return LE_FAULT;
+    }
+
+    return LE_OK;
+}
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Perform Arduino reset
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+le_result_t mangoh_muxCtrl_ArduinoReset
+(
+    void
+)
+{
+    le_result_t res;
+
+    res = mangoh_muxCtrl_ArduinoAssertReset();
+    if(res != LE_OK)
+    {
+        return res;
+    }
+
+    usleep(300);
+
+    res = mangoh_muxCtrl_ArduinoDeassertReset();
+
+    return res;
+}
 
 COMPONENT_INIT
 {
@@ -522,4 +598,5 @@ COMPONENT_INIT
     mangoh_gpioPinIot0Reset_SetPushPullOutput(MANGOH_GPIOPINIOT0RESET_ACTIVE_LOW, true);
     mangoh_gpioPinIot1Reset_SetPushPullOutput(MANGOH_GPIOPINIOT1RESET_ACTIVE_LOW, true);
     mangoh_gpioPinIot2Reset_SetPushPullOutput(MANGOH_GPIOPINIOT2RESET_ACTIVE_LOW, true);
+    mangoh_gpioPinArduinoReset_SetPushPullOutput(MANGOH_GPIOPINARDUINORESET_ACTIVE_LOW, true);
 }

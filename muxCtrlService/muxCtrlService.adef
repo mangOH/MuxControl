@@ -20,6 +20,7 @@ bindings:
     muxCtrlService.muxCtrl.mangoh_gpioPinIot0Reset       -> gpioExpanderService.mangoh_gpioExp3Pin4
     muxCtrlService.muxCtrl.mangoh_gpioPinIot1Reset       -> gpioExpanderService.mangoh_gpioExp3Pin3
     muxCtrlService.muxCtrl.mangoh_gpioPinIot2Reset       -> gpioExpanderService.mangoh_gpioExp3Pin2
+    muxCtrlService.muxCtrl.mangoh_gpioPinArduinoReset    -> gpioExpanderService.mangoh_gpioExp1Pin4
 }
 
 processes:

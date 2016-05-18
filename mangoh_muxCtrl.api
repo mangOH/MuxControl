@@ -258,3 +258,46 @@ FUNCTION le_result_t IotSlot1DeassertReset
 FUNCTION le_result_t IotSlot2DeassertReset
 (
 );
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Put Arduino in reset state
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+FUNCTION le_result_t ArduinoAssertReset
+(
+);
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Put Arduino out of reset state
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+FUNCTION le_result_t ArduinoDeassertReset
+(
+);
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Perform Arduino reset
+ *
+ * @return
+ *      - LE_FAULT
+ *      - LE_UNSUPPORTED if the board doesn't have an Arduino
+ *      - LE_OK
+ */
+//--------------------------------------------------------------------------------------------------
+FUNCTION le_result_t ArduinoReset
+(
+);
+

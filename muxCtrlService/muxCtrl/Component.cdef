@@ -16,6 +16,7 @@ requires:
         mangoh_gpioPinIot0Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
         mangoh_gpioPinIot1Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
         mangoh_gpioPinIot2Reset       = ${LEGATO_ROOT}/interfaces/le_gpio.api
+        mangoh_gpioPinArduinoReset    = ${LEGATO_ROOT}/interfaces/le_gpio.api
     }
 }
 
