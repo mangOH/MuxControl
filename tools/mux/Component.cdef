@@ -3,7 +3,7 @@ requires:
 {
     api:
     {
-        ${MANGOH_ROOT}/apps/MuxControl/mangoh_muxCtrl.api  [manual-start]
+        mangoh_muxCtrl.api  [manual-start]
     }
 }
 
